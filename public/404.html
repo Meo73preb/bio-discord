@@ -3,28 +3,107 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="robots" content="noindex, follow">
-  <meta name="theme-color" content="#071015">
-  <title>Không tìm thấy — Trà Mèo</title>
-  <link rel="icon" href="/favicon.ico" sizes="any">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#05090b">
+  <title>404 // Sương Mù Hệ Thống — Trà Mèo</title>
   <style>
-    :root { color-scheme: dark; font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #071015; color: #e7f0ec; }
+    :root { color-scheme: dark; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: #05090b; color: #b5f5d3; }
     * { box-sizing: border-box; }
-    body { min-height: 100vh; margin: 0; display: grid; place-items: center; padding: 24px; }
-    main { width: min(100%, 34rem); padding: clamp(28px, 7vw, 56px); border: 1px solid rgba(166,216,204,.25); border-radius: 20px; background: #0b181e; }
-    p { color: #a6d8cc; font-size: .8rem; letter-spacing: .14em; text-transform: uppercase; }
-    h1 { margin: 0; font-family: Georgia, serif; font-size: clamp(3rem, 12vw, 5rem); font-weight: 500; line-height: 1; }
-    .copy { color: #9aaead; line-height: 1.7; }
-    a { display: inline-block; margin-top: 18px; padding: 10px 15px; border-radius: 999px; background: #a6d8cc; color: #071015; font-weight: 700; text-decoration: none; }
-    a:focus-visible { outline: 3px solid #e7f0ec; outline-offset: 4px; }
+    body { min-height: 100svh; margin: 0; padding: clamp(18px, 5vw, 54px); display: grid; place-items: center; overflow-x: hidden; background: radial-gradient(ellipse at 50% 0%, rgba(28,73,57,.22), transparent 56%), #05090b; }
+    body::before { position: fixed; inset: 0; z-index: 3; pointer-events: none; content: ""; opacity: .12; background: repeating-linear-gradient(0deg, transparent 0 3px, rgba(113,255,176,.14) 4px); mix-blend-mode: screen; }
+    main { position: relative; width: min(100%, 920px); padding: clamp(20px, 5vw, 42px); border: 1px solid rgba(126,255,180,.3); background: rgba(5,13,11,.91); box-shadow: 0 0 70px rgba(42,255,132,.08), inset 0 0 46px rgba(42,255,132,.025); }
+    .topline { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; color: #79efa7; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; }
+    .simulation { margin: 22px 0 16px; padding: 10px 12px; border-left: 2px solid #e7bb73; color: #f3d49c; background: rgba(231,187,115,.08); font-size: 11px; line-height: 1.6; }
+    h1 { margin: 0; color: #d0ffe1; font-size: clamp(28px, 7vw, 58px); letter-spacing: -.07em; line-height: 1; text-shadow: 0 0 24px rgba(93,255,157,.32); }
+    .subtitle { margin: 12px 0 24px; color: #99b9a4; font-size: 12px; line-height: 1.7; }
+    .terminal { min-height: 205px; margin: 0; padding: 18px; overflow: hidden; border: 1px solid rgba(126,255,180,.16); background: rgba(0,0,0,.4); color: #a4e7ba; font-size: clamp(10px, 2.6vw, 12px); line-height: 1.8; white-space: pre-wrap; word-break: break-word; }
+    .terminal .alert { color: #ff8f9f; text-shadow: 0 0 12px rgba(255,70,105,.6); }
+    .terminal .muted { color: #6f9580; }
+    .cursor { display: inline-block; width: 7px; height: 14px; vertical-align: -2px; background: #8fffb5; animation: blink .7s steps(2, jump-none) infinite; }
+    .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 20px; }
+    button, .home-link { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; padding: 10px 15px; border: 1px solid rgba(126,255,180,.42); color: #c9ffda; background: rgba(20,62,39,.25); font: inherit; font-size: 11px; text-decoration: none; cursor: pointer; transition: background .2s ease, color .2s ease, transform .2s ease; }
+    button:hover, .home-link:hover { color: #041008; background: #9dffc0; transform: translateY(-1px); }
+    button:focus-visible, .home-link:focus-visible { outline: 2px solid #e7bb73; outline-offset: 4px; }
+    .countdown { margin-left: auto; color: #7d9b87; font-size: 10px; }
+    .countdown strong { color: #d4ffd9; font-size: 14px; }
+    .glitch { animation: glitch .36s steps(2, jump-none) infinite; }
+    body.leaving main { opacity: 0; transform: translateY(8px); transition: opacity .22s ease, transform .22s ease; }
+    @keyframes blink { 50% { opacity: 0; } }
+    @keyframes glitch { 0%, 88%, 100% { transform: translateX(0); } 90% { transform: translateX(2px); text-shadow: -2px 0 #ff6178; } 94% { transform: translateX(-2px); text-shadow: 2px 0 #61ffdb; } }
+    @media (max-width: 520px) { .countdown { width: 100%; margin-left: 0; } .terminal { min-height: 190px; } }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } }
   </style>
 </head>
 <body>
   <main>
-    <p>404 · Lạc giữa làn sương</p>
-    <h1>Không thấy<br>đường này.</h1>
-    <div class="copy">Liên kết có thể đã cũ hoặc bị gõ nhầm. Nội dung chính vẫn ở trang hồ sơ.</div>
-    <a href="/">Quay về bio</a>
+    <div class="topline"><span>TM // SIGNAL TRACE</span><span>HTTP 200 · SIMULATION MODE</span></div>
+    <p class="simulation"><strong>GIAO DIỆN MÔ PHỎNG.</strong> Không có truy cập hệ thống, quét mạng hay khai thác nào đang diễn ra. Chỉ địa chỉ hash trên trình duyệt được thay đổi để tạo hiệu ứng.</p>
+    <h1 class="glitch">SYSTEM BREACH // 404</h1>
+    <p class="subtitle">Đường dẫn này không thuộc bản đồ. Nhật ký bên dưới là hiệu ứng hình ảnh; trang sẽ tự trở về hồ sơ nếu bạn không dừng bộ đếm.</p>
+    <pre id="terminal" class="terminal" aria-label="Nhật ký mô phỏng" aria-live="polite"></pre>
+    <div class="actions">
+      <a class="home-link" href="/">Mở trang hồ sơ</a>
+      <button id="stop-redirect" type="button">Dừng chuyển hướng</button>
+      <span class="countdown" id="countdown" aria-live="polite">Tự trở về sau <strong>--</strong> giây</span>
+    </div>
   </main>
+  <script>
+    (() => {
+      const terminal = document.getElementById("terminal");
+      const countdown = document.getElementById("countdown");
+      const stopButton = document.getElementById("stop-redirect");
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789!@#$%";
+      const lines = [
+        "[TRACE] Đang kiểm tra dấu vết của đường dẫn…",
+        "[SIM] Mô-đun sương: hoạt ảnh cục bộ đã khởi tạo.",
+        "[WARN] Không tìm thấy tài nguyên tại vị trí này.",
+        "[SIM] Ghi đè giả lập: chỉ hiệu ứng giao diện đang chạy.",
+        "[TRACE] Hướng quay về đã sẵn sàng."
+      ];
+      const randomHash = () => Array.from({ length: 21 }, () => chars[Math.floor(Math.random() * chars.length)]).join("");
+      const startedAt = Date.now();
+      const waitMs = 3000 + Math.floor(Math.random() * 18001);
+      const redirectAt = startedAt + waitMs;
+      let stopped = false;
+      let lineIndex = 0;
+      const paintLog = () => {
+        const recent = Array.from({ length: 5 }, (_, i) => lines[(lineIndex + i) % lines.length]);
+        lineIndex = (lineIndex + 1) % lines.length;
+        terminal.textContent = recent.join("\n") + "\n> " + (stopped ? "MÔ PHỎNG ĐÃ DỪNG." : "ĐANG CHỜ HẾT THỜI GIAN…") + " ▌";
+      };
+      const hashTimer = window.setInterval(() => {
+        if (stopped) return;
+        // Replace the current history entry so the visual loop does not flood browser history.
+        window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}#${randomHash()}`);
+      }, 120);
+      const logTimer = window.setInterval(paintLog, 780);
+      const clockTimer = window.setInterval(() => {
+        if (stopped) return;
+        const seconds = Math.max(0, Math.ceil((redirectAt - Date.now()) / 1000));
+        countdown.innerHTML = `Tự trở về sau <strong>${seconds}</strong> giây`;
+        if (Date.now() >= redirectAt) {
+          stopTimers();
+          document.body.classList.add("leaving");
+          window.setTimeout(() => window.location.assign("/"), 230);
+        }
+      }, 200);
+      function stopTimers() {
+        window.clearInterval(hashTimer);
+        window.clearInterval(logTimer);
+        window.clearInterval(clockTimer);
+      }
+      stopButton.addEventListener("click", () => {
+        stopped = true;
+        stopTimers();
+        stopButton.disabled = true;
+        stopButton.textContent = "Đã dừng";
+        countdown.textContent = "Chuyển hướng đã bị dừng.";
+        paintLog();
+      });
+      paintLog();
+      countdown.innerHTML = `Tự trở về sau <strong>${Math.ceil(waitMs / 1000)}</strong> giây`;
+      window.addEventListener("pagehide", stopTimers, { once: true });
+    })();
+  </script>
 </body>
 </html>

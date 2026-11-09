@@ -109,6 +109,20 @@
           linear-gradient(105deg, rgba(7, 16, 21, 0.98) 0%, rgba(7, 16, 21, 0.82) 40%, rgba(7, 16, 21, 0.5) 100%),
           url("/assets/fog-forest-hero.webp") center / cover no-repeat;
       }
+      .page-shell::before {
+        content: "";
+        position: absolute;
+        inset: -12%;
+        z-index: -1;
+        pointer-events: none;
+        opacity: .72;
+        background:
+          radial-gradient(ellipse at var(--mist-x, 74%) var(--mist-y, 34%), rgba(166,216,204,.13), transparent 35%),
+          radial-gradient(ellipse at 22% 78%, rgba(112,75,85,.13), transparent 34%);
+        transform: translate3d(0, 0, 0) scale(1.04);
+        animation: fog-shift 30s ease-in-out infinite alternate;
+        will-change: transform;
+      }
       .page-shell::after {
         content: "";
         position: absolute;
@@ -205,37 +219,6 @@
       .brand-mark .mark-stroke { stroke: var(--mist-bright); }
       .brand-mark .mark-omen { fill: var(--wine); }
       .brand-mark .mark-haze { fill: rgba(166,216,204,.12); }
-      .sound-control {
-        display: inline-flex;
-        align-items: center;
-        gap: 9px;
-        min-height: 34px;
-        border: 1px solid var(--line);
-        border-radius: 999px;
-        padding: 7px 11px;
-        color: var(--paper-dim);
-        background: rgba(7,16,21,.42);
-        backdrop-filter: blur(14px);
-        cursor: pointer;
-        font-size: 9px;
-        font-weight: 800;
-        letter-spacing: .12em;
-        text-transform: uppercase;
-        transition: color .2s ease, border-color .2s ease, background .2s ease, box-shadow .2s ease, transform .18s var(--ease-out);
-      }
-      .sound-control:hover, .sound-control.is-playing {
-        color: var(--mist-bright);
-        border-color: rgba(166,216,204,.64);
-        background: rgba(166,216,204,.1);
-        box-shadow: 0 0 24px rgba(166,216,204,.12);
-      }
-      .sound-control:active { transform: scale(.97); }
-      .sound-control.is-error { color: #d5a5ad; border-color: rgba(112,75,85,.75); }
-      .sound-icon { position: relative; width: 14px; height: 14px; display: inline-block; }
-      .sound-icon::before, .sound-icon::after { content: ""; position: absolute; inset: 2px 0; border: 1px solid currentColor; border-left: 0; border-top-color: transparent; border-bottom-color: transparent; border-radius: 50%; opacity: .56; transform: scaleX(.68); }
-      .sound-icon::after { inset: 4px 3px; opacity: .94; transform: scaleX(.8); }
-      .sound-control.is-playing .sound-icon::before { animation: sound-pulse 1.2s ease-in-out infinite; }
-      .sound-control.is-playing .sound-icon::after { animation: sound-pulse .8s ease-in-out infinite reverse; }
       .nav {
         display: flex;
         align-items: center;
@@ -362,35 +345,34 @@
         opacity: .58;
         pointer-events: none;
       }
-      .time-orbit {
-        position: absolute;
-        top: 18px;
-        right: 18px;
-        width: 74px;
-        height: 74px;
-        z-index: 2;
-        color: var(--mist);
-        opacity: .74;
-        pointer-events: none;
-        transition: opacity .3s ease, filter .3s ease;
+      .local-clock {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 16px;
+        margin: 23px 0 4px;
+        padding: 15px 0 16px;
+        border-top: 1px solid var(--line-soft);
+        border-bottom: 1px solid var(--line-soft);
       }
-      .time-orbit::before, .time-orbit::after, .orbit-ring {
-        content: "";
-        position: absolute;
-        inset: 0;
-        border: 1px solid rgba(166,216,204,.28);
-        border-radius: 50%;
-      }
-      .time-orbit::before { inset: 8px; border-style: dashed; border-color: rgba(166,216,204,.5); animation: time-spin 9s linear infinite; }
-      .time-orbit::after { inset: 18px; border-color: rgba(112,75,85,.68); border-left-color: transparent; border-bottom-color: transparent; transform: rotate(35deg); }
-      .orbit-ring { inset: 3px; border-color: rgba(166,216,204,.11); border-right-color: var(--mist); transform: rotate(-18deg); }
-      .orbit-hand { position: absolute; left: 50%; top: 50%; width: 1px; height: 20px; background: var(--mist-bright); transform-origin: 50% 100%; transform: translate(-50%, -100%) rotate(28deg); box-shadow: 0 0 9px rgba(166,216,204,.75); }
-      .orbit-hand::after { content: ""; position: absolute; left: -2px; bottom: -2px; width: 5px; height: 5px; border-radius: 50%; background: var(--wine); box-shadow: 0 0 10px rgba(112,75,85,.75); }
-      .time-orbit[data-state="online"]::before { animation-play-state: running; }
-      .time-orbit[data-state="idle"], .time-orbit[data-state="dnd"], .time-orbit[data-state="offline"] { opacity: .32; filter: grayscale(.48); }
-      .time-orbit[data-state="idle"]::before, .time-orbit[data-state="dnd"]::before, .time-orbit[data-state="offline"]::before { animation-play-state: paused; }
-      .time-orbit[data-state="offline"] { opacity: .18; }
-      .time-state { position: absolute; right: 22px; top: 95px; color: rgba(231,240,236,.46); font-size: 8px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+      .clock-label, .clock-date { margin: 0; color: var(--paper-dim); font-size: 9px; font-weight: 800; letter-spacing: .13em; text-transform: uppercase; }
+      .clock-time { display: block; margin: 2px 0 3px; color: var(--mist-bright); font-family: var(--display); font-size: clamp(27px, 7vw, 35px); font-variant-numeric: tabular-nums; line-height: 1; }
+      .clock-controls { display: flex; flex-direction: column; align-items: center; gap: 9px; }
+      .clock-face { position: relative; width: 54px; height: 54px; border: 1px solid rgba(166,216,204,.38); border-radius: 50%; background: radial-gradient(circle, rgba(166,216,204,.08), transparent 70%); box-shadow: inset 0 0 18px rgba(166,216,204,.06), 0 0 20px rgba(166,216,204,.05); }
+      .clock-face::before { content: ""; position: absolute; inset: 5px; border: 1px dashed rgba(166,216,204,.25); border-radius: 50%; }
+      .clock-hand { position: absolute; left: 50%; bottom: 50%; display: block; width: 1px; border-radius: 2px; transform-origin: 50% 100%; transform: translateX(-50%) rotate(var(--angle, 0deg)); }
+      .clock-hand.hour { height: 13px; width: 2px; background: var(--paper); --angle: var(--hour-angle, 0deg); }
+      .clock-hand.minute { height: 18px; background: var(--mist); --angle: var(--minute-angle, 0deg); }
+      .clock-hand.second { height: 21px; width: 1px; background: var(--wine); --angle: var(--second-angle, 0deg); }
+      .clock-face::after { content: ""; position: absolute; left: 50%; top: 50%; width: 4px; height: 4px; border-radius: 50%; background: var(--mist-bright); transform: translate(-50%, -50%); }
+      .freeze-switch { display: inline-flex; align-items: center; gap: 7px; color: var(--paper-dim); font-size: 8px; font-weight: 800; letter-spacing: .06em; white-space: nowrap; cursor: pointer; }
+      .freeze-switch input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+      .toggle-track { position: relative; width: 28px; height: 16px; flex: 0 0 auto; border: 1px solid var(--line); border-radius: 99px; background: rgba(7,16,21,.75); transition: background .2s ease, border-color .2s ease; }
+      .toggle-track > span { position: absolute; top: 2px; left: 2px; width: 10px; height: 10px; border-radius: 50%; background: var(--paper-dim); transition: transform .2s ease, background .2s ease; }
+      .freeze-switch input:checked + .toggle-track { border-color: var(--mist); background: rgba(166,216,204,.22); }
+      .freeze-switch input:checked + .toggle-track > span { background: var(--mist-bright); transform: translateX(12px); }
+      .freeze-switch input:focus-visible + .toggle-track { outline: 2px solid var(--mist); outline-offset: 3px; }
+      .clock-mode { color: rgba(231,240,236,.42); font-size: 8px; letter-spacing: .05em; text-align: center; }
       .profile-top { display: flex; align-items: center; gap: 15px; position: relative; z-index: 3; padding-right: 56px; }
       .avatar-wrap { position: relative; width: 72px; height: 72px; flex: 0 0 auto; }
       .avatar {
@@ -428,6 +410,29 @@
       .meta-item { padding: 11px 12px; border: 1px solid var(--line-soft); background: rgba(7,16,21,.22); }
       .meta-value { display: block; color: var(--paper); font-size: 12px; font-weight: 700; }
       .meta-caption { display: block; margin-top: 3px; color: var(--paper-dim); font-size: 10px; }
+      .spotify-widget[hidden] { display: none; }
+      .spotify-widget {
+        display: grid;
+        grid-template-columns: 58px minmax(0, 1fr);
+        gap: 12px;
+        align-items: center;
+        margin-top: 19px;
+        padding: 11px;
+        border: 1px solid rgba(166,216,204,.16);
+        background: linear-gradient(110deg, rgba(166,216,204,.075), rgba(7,16,21,.28));
+      }
+      .spotify-art-wrap { width: 58px; height: 58px; overflow: hidden; border: 1px solid rgba(166,216,204,.28); background: var(--ink-3); box-shadow: 0 6px 18px rgba(0,0,0,.28); }
+      .spotify-art { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .55s var(--ease-out), filter .55s ease; }
+      .spotify-widget:hover .spotify-art { filter: brightness(1.08); transform: scale(1.07) rotate(-3deg); }
+      .spotify-copy { min-width: 0; }
+      .spotify-kicker { display: flex; align-items: center; gap: 6px; margin: 0 0 4px; color: var(--mist); font-size: 8px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+      .spotify-kicker::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: #89d6a0; box-shadow: 0 0 9px rgba(137,214,160,.72); }
+      .spotify-title, .spotify-artist { overflow: hidden; margin: 0; text-overflow: ellipsis; white-space: nowrap; }
+      .spotify-title { color: var(--paper); font-size: 11px; font-weight: 800; }
+      .spotify-artist { margin-top: 1px; color: var(--paper-dim); font-size: 10px; }
+      .spotify-progress { height: 3px; margin-top: 8px; overflow: hidden; border-radius: 9px; background: rgba(231,240,236,.13); }
+      .spotify-progress > span { display: block; width: 0; height: 100%; border-radius: inherit; background: var(--mist); box-shadow: 0 0 9px rgba(166,216,204,.55); transition: width .8s linear; }
+      .spotify-timing { display: flex; justify-content: space-between; margin-top: 3px; color: rgba(231,240,236,.48); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 8px; font-variant-numeric: tabular-nums; }
       .copy-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 19px; }
       .user-id { color: rgba(231,240,236,.48); font-family: ui-monospace, SFMono-Regular, Menlo, monospace; font-size: 10px; letter-spacing: .02em; }
       .copy-button { padding: 8px 11px; font-size: 9px; }
@@ -487,7 +492,6 @@
       .social-info small { display: block; margin-bottom: 3px; color: var(--paper-dim); font-size: 9px; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
       .social-info strong { display: block; font-size: 13px; font-weight: 700; }
       .social-info em { display: block; margin-top: 3px; color: rgba(231,240,236,.48); font-size: 9px; font-style: normal; letter-spacing: .03em; }
-      .youtube-audio-frame { position: fixed; left: -1000px; bottom: 0; z-index: -1; width: 2px; height: 2px; border: 0; opacity: .01; pointer-events: none; overflow: hidden; }
       .social-arrow { color: var(--mist); font-size: 18px; transition: transform .2s var(--ease-out); }
       .social-link:hover .social-arrow { transform: translate(3px, -3px); }
 
@@ -496,8 +500,6 @@
       .live-state::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--mist); box-shadow: 0 0 10px var(--mist); }
 
       .reveal { opacity: 0; transform: translateY(18px); animation: reveal .85s var(--ease-out) forwards; }
-      @keyframes time-spin { to { transform: rotate(360deg); } }
-      @keyframes sound-pulse { 0%, 100% { transform: scaleX(.66); opacity: .45; } 50% { transform: scaleX(1.08); opacity: 1; } }
       .delay-1 { animation-delay: .1s; }
       .delay-2 { animation-delay: .2s; }
       .delay-3 { animation-delay: .34s; }
@@ -520,13 +522,12 @@
       @keyframes card-in { from { opacity: 0; transform: translate3d(20px, 26px, 0) rotate(1deg); } to { opacity: 1; transform: translate3d(0,0,0) rotate(0); } }
       @keyframes mist-drift { to { transform: translate3d(-7vw, 4vh, 0) rotate(-8deg) scale(1.1); } }
       @keyframes orbit-drift { to { transform: translate3d(-3vw, 3vh, 0) scale(1.05) rotate(4deg); } }
+      @keyframes fog-shift { to { transform: translate3d(-1.5%, 1%, 0) scale(1.09); opacity: .54; } }
 
       @media (max-width: 840px) {
         .site-header, .hero, .content-section, footer { width: min(100% - 40px, 620px); }
         .site-header { padding-top: 20px; }
         .nav { gap: 16px; font-size: 9px; }
-        .sound-control span:last-child { display: none; }
-        .sound-control { padding: 8px 10px; }
         .hero { display: block; min-height: auto; padding: 104px 0 102px; }
         .hero-copy { max-width: 100%; }
         h1 { max-width: 560px; font-size: clamp(70px, 16vw, 114px); }
@@ -545,8 +546,9 @@
         .hero-lede { font-size: 20px; }
         .profile-card { margin-top: 58px; padding: 18px; }
         .profile-top { padding-right: 48px; }
-        .time-orbit { top: 14px; right: 14px; transform: scale(.88); transform-origin: top right; }
-        .time-state { top: 83px; right: 17px; }
+        .local-clock { gap: 10px; }
+        .clock-time { font-size: 29px; }
+        .freeze-switch { font-size: 7px; }
         .content-section { padding-top: 74px; }
         .section-heading { display: block; margin-bottom: 40px; }
         .section-note { margin-top: 24px; }
@@ -557,7 +559,6 @@
         .social-link:nth-child(even) { padding-left: 0; }
         .social-link:hover, .social-link:nth-child(even):hover { padding-left: 8px; }
         footer { display: block; padding-bottom: 22px; }
-        .sound-control { min-height: 32px; }
         .social-link { min-height: 62px; }
         footer span { display: block; margin-top: 10px; }
       }
@@ -571,6 +572,7 @@
       }
       @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+        .page-shell::before { will-change: auto; }
       }
     </style>
   </head>
@@ -591,9 +593,6 @@
           <a href="#verse">Tâm ngữ</a>
           <a href="#connect">Kết nối</a>
         </nav>
-        <button class="sound-control" id="music-toggle" type="button" aria-pressed="false" aria-label="Bật nhạc nền Thiên Ý">
-          <span class="sound-icon" aria-hidden="true"></span><span id="music-label">Bật Thiên Ý</span>
-        </button>
       </header>
 
       <main id="main-content">
@@ -622,8 +621,22 @@
                 <p id="handle" class="profile-handle">@meo_mate</p>
               </div>
             </div>
-            <div class="time-orbit" id="time-orbit" data-state="idle" aria-hidden="true"><span class="orbit-ring"></span><span class="orbit-hand"></span></div>
-            <span class="time-state" id="time-state">pháp tắc: đứng hình</span>
+            <section class="local-clock" aria-label="Đồng hồ giờ địa phương">
+              <div>
+                <p class="clock-label">Giờ tại thiết bị</p>
+                <time id="local-time" class="clock-time" aria-live="off">--:--:--</time>
+                <p id="local-date" class="clock-date">Đang lấy ngày tháng…</p>
+              </div>
+              <div class="clock-controls">
+                <div class="clock-face" aria-hidden="true"><span class="clock-hand hour"></span><span class="clock-hand minute"></span><span class="clock-hand second"></span></div>
+                <label class="freeze-switch" for="freeze-clock">
+                  <input id="freeze-clock" type="checkbox" aria-describedby="clock-mode" />
+                  <span class="toggle-track" aria-hidden="true"><span></span></span>
+                  <span>Pháp Tắc: Đứng Hình</span>
+                </label>
+                <span id="clock-mode" class="clock-mode" aria-live="polite">Đang chạy theo giờ thiết bị</span>
+              </div>
+            </section>
             <div class="status-line" id="status-line"><span class="mini-dot"></span><span id="status-label">Đang chờ · mobile</span></div>
             <div class="profile-divider"></div>
             <p class="profile-label">Dòng trạng thái</p>
@@ -632,6 +645,16 @@
               <div class="meta-item"><span id="activity-value" class="meta-value">Custom status</span><span class="meta-caption">Hoạt động</span></div>
               <div class="meta-item"><span id="sync-value" class="meta-value" aria-live="polite">Đang đồng bộ</span><span class="meta-caption">Lanyard API</span></div>
             </div>
+            <section id="spotify-widget" class="spotify-widget" aria-label="Đang nghe trên Spotify" aria-live="polite" hidden>
+              <div class="spotify-art-wrap"><img id="spotify-art" class="spotify-art" src="/assets/fog-discord-mark.svg" width="58" height="58" alt="Ảnh bìa album" loading="lazy" /></div>
+              <div class="spotify-copy">
+                <p class="spotify-kicker">Listening to Spotify</p>
+                <p id="spotify-title" class="spotify-title">—</p>
+                <p id="spotify-artist" class="spotify-artist">—</p>
+                <div id="spotify-progress" class="spotify-progress" role="progressbar" aria-label="Tiến độ bài hát" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="spotify-progress-fill"></span></div>
+                <div class="spotify-timing"><span id="spotify-elapsed">0:00</span><span id="spotify-duration">0:00</span></div>
+              </div>
+            </section>
             <div class="copy-row">
               <span class="user-id">ID · 1159075341227278377</span>
               <button class="copy-button" id="copy-id" type="button" aria-label="Sao chép Discord ID">
@@ -704,13 +727,11 @@
       </footer>
     </div>
 
-    <div id="youtube-player" class="youtube-audio-frame" aria-hidden="true"></div>
     <script>
       // One-file runtime: live Discord presence via the public Lanyard endpoint supplied by the user.
-      const LANYARD_URL = "https://api.lanyard.rest/v1/users/1159075341227278377";
-      const LANYARD_SOCKET_URL = "wss://api.lanyard.rest/socket";
       const DISCORD_ID = "1159075341227278377";
-      const YOUTUBE_VIDEO_ID = "WmqDcS6USiI";
+      const LANYARD_URL = `https://api.lanyard.rest/v1/users/${DISCORD_ID}`;
+      const LANYARD_SOCKET_URL = "wss://api.lanyard.rest/socket";
       const fallback = {
         discord_user: { id: DISCORD_ID, display_name: "Trà Mèo", username: "meo_mate", avatar: null },
         discord_status: "offline",
@@ -734,6 +755,68 @@
 
       const $ = (id) => document.getElementById(id);
       const statusNames = { online: "Đang trực tuyến", idle: "Đang chờ", dnd: "Không làm phiền", offline: "Ngoại tuyến" };
+      let spotifyTiming = null;
+      const formatDuration = (milliseconds) => {
+        const seconds = Math.max(0, Math.floor(milliseconds / 1000));
+        return `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
+      };
+      function isValidSpotify(spotify) {
+        if (spotify == null) return true;
+        if (typeof spotify !== "object" || Array.isArray(spotify)) return false;
+        for (const field of ["song", "artist", "album"]) {
+          if (spotify[field] != null && !isShortString(spotify[field], 256)) return false;
+        }
+        if (spotify.album_art_url != null) {
+          if (typeof spotify.album_art_url !== "string" || spotify.album_art_url.length > 512) return false;
+          try {
+            const artUrl = new URL(spotify.album_art_url);
+            if (artUrl.protocol !== "https:" || artUrl.hostname !== "i.scdn.co") return false;
+          } catch { return false; }
+        }
+        if (spotify.timestamps != null) {
+          const times = spotify.timestamps;
+          if (typeof times !== "object" || Array.isArray(times)) return false;
+          for (const key of ["start", "end"]) if (times[key] != null && !Number.isFinite(times[key])) return false;
+        }
+        return true;
+      }
+      function refreshSpotifyProgress() {
+        const progress = $("spotify-progress");
+        if (!progress || !spotifyTiming) return;
+        const total = spotifyTiming.end - spotifyTiming.start;
+        if (!(total > 0)) {
+          $("spotify-elapsed").textContent = "0:00";
+          $("spotify-duration").textContent = "—:—";
+          progress.setAttribute("aria-valuenow", "0");
+          $("spotify-progress-fill").style.width = "0%";
+          return;
+        }
+        const elapsed = Math.max(0, Math.min(total, Date.now() - spotifyTiming.start));
+        const percent = Math.round((elapsed / total) * 1000) / 10;
+        $("spotify-elapsed").textContent = formatDuration(elapsed);
+        $("spotify-duration").textContent = formatDuration(total);
+        $("spotify-progress-fill").style.width = `${percent}%`;
+        progress.setAttribute("aria-valuenow", String(Math.round(percent)));
+      }
+      function renderSpotify(spotify) {
+        const widget = $("spotify-widget");
+        if (!widget) return;
+        if (!spotify || !spotify.song || !spotify.artist || !isValidSpotify(spotify)) {
+          spotifyTiming = null;
+          widget.hidden = true;
+          return;
+        }
+        widget.hidden = false;
+        $("spotify-title").textContent = spotify.song;
+        $("spotify-artist").textContent = spotify.artist;
+        const artwork = $("spotify-art");
+        artwork.onerror = () => { artwork.onerror = null; artwork.src = "/assets/fog-discord-mark.svg"; };
+        artwork.src = spotify.album_art_url || "/assets/fog-discord-mark.svg";
+        spotifyTiming = Number.isFinite(spotify.timestamps?.start) && Number.isFinite(spotify.timestamps?.end)
+          ? { start: spotify.timestamps.start, end: spotify.timestamps.end }
+          : null;
+        refreshSpotifyProgress();
+      }
       const validStatuses = new Set(Object.keys(statusNames));
       const isShortString = (value, maxLength) => typeof value === "string" && value.length <= maxLength;
       function isValidPresenceData(data) {
@@ -745,6 +828,7 @@
           if (user[field] != null && !isShortString(user[field], 80)) return false;
         }
         if (user.avatar != null && (typeof user.avatar !== "string" || user.avatar.length > 128 || !/^(a_)?[A-Za-z0-9_]+$/.test(user.avatar))) return false;
+        if (data.spotify != null && !isValidSpotify(data.spotify)) return false;
         if (data.activities != null && (!Array.isArray(data.activities) || data.activities.length > 100)) return false;
         if (Array.isArray(data.activities) && !data.activities.every((item) => item && typeof item === "object" && !Array.isArray(item) && (item.type == null || typeof item.type === "number") && (item.name == null || isShortString(item.name, 128)) && (item.state == null || isShortString(item.state, 256)))) return false;
         return true;
@@ -775,8 +859,7 @@
         const custom = currentStatus(data);
         const hasApi = !isFallback;
         document.body.dataset.discordState = status;
-        $("time-orbit").dataset.state = isFallback ? "offline" : status;
-        $("time-state").textContent = isFallback ? "pháp tắc: chưa xác minh" : status === "online" ? "pháp tắc: vận hành" : status === "offline" ? "pháp tắc: tắt" : "pháp tắc: đứng hình";
+        renderSpotify(data.spotify);
 
         $("display-name").textContent = name;
         $("handle").textContent = `@${user.username || "meo_mate"}`;
@@ -968,115 +1051,48 @@
         }
       }
 
-      const youtubeContainer = $("youtube-player");
-      const musicToggle = $("music-toggle");
-      const musicLabel = $("music-label");
-      let musicIntent = false;
-      let youtubeReady = false;
-      let youtubeFailed = false;
-      let youtubeApiPlayer = null;
-      let youtubeLoadTimer = null;
-      let youtubeApiLoading = false;
-      function updateMusicUi(isPlaying) {
-        musicToggle.classList.toggle("is-playing", isPlaying);
-        musicToggle.classList.remove("is-error");
-        musicToggle.setAttribute("aria-pressed", String(isPlaying));
-        musicToggle.setAttribute("aria-label", isPlaying ? "Tắt nhạc nền Thiên Ý" : "Bật nhạc nền Thiên Ý");
-        musicLabel.textContent = isPlaying ? "Tắt Thiên Ý" : "Bật Thiên Ý";
+      // Local time is derived from the visitor's device timezone; freezing captures one exact instant.
+      const freezeClock = $("freeze-clock");
+      let frozenClockTime = null;
+      const localTimeFormatter = new Intl.DateTimeFormat("vi-VN", { hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23" });
+      const localDateFormatter = new Intl.DateTimeFormat("vi-VN", { weekday: "long", day: "2-digit", month: "long", year: "numeric" });
+      function paintClock() {
+        const now = frozenClockTime || new Date();
+        const hour = now.getHours();
+        const minute = now.getMinutes();
+        const second = now.getSeconds();
+        $("local-time").textContent = localTimeFormatter.format(now);
+        $("local-time").dateTime = now.toISOString();
+        $("local-date").textContent = localDateFormatter.format(now);
+        const face = document.querySelector(".clock-face");
+        face.style.setProperty("--hour-angle", `${(hour % 12) * 30 + minute * 0.5}deg`);
+        face.style.setProperty("--minute-angle", `${minute * 6 + second * 0.1}deg`);
+        face.style.setProperty("--second-angle", `${second * 6}deg`);
+        $("clock-mode").textContent = frozenClockTime ? "Đã đóng băng tại thời điểm này" : "Đang chạy theo giờ thiết bị";
       }
-      function youtubeError(event) {
-        musicIntent = false;
-        youtubeReady = false;
-        youtubeFailed = true;
-        updateMusicUi(false);
-        musicToggle.classList.add("is-error");
-        musicToggle.title = `YouTube không thể phát trong trang (mã ${event?.data || "153"}). Bấm để mở Thiên Ý.`;
-        musicLabel.textContent = "Mở Thiên Ý";
-      }
-
-      function openYoutubeFallback() {
-        const opened = window.open(`https://www.youtube.com/watch?v=${YOUTUBE_VIDEO_ID}`, "_blank", "noopener,noreferrer");
-        musicIntent = false;
-        musicLabel.textContent = opened ? "Đã mở Thiên Ý" : "Mở Thiên Ý";
-        musicToggle.classList.remove("is-playing");
-        musicToggle.setAttribute("aria-pressed", "false");
-        window.setTimeout(() => updateMusicUi(false), 1800);
-      }
-      function onYoutubeStateChange(event) {
-        if (!window.YT) return;
-        if (event.data === YT.PlayerState.PLAYING) updateMusicUi(true);
-        if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.ENDED) {
-          musicIntent = false;
-          updateMusicUi(false);
-        }
-      }
-      function initYoutubePlayer() {
-        if (!window.YT?.Player || youtubeApiPlayer) return;
-        youtubeApiPlayer = new YT.Player(youtubeContainer, {
-          width: "2",
-          height: "2",
-          videoId: YOUTUBE_VIDEO_ID,
-          host: "https://www.youtube-nocookie.com",
-          playerVars: {
-            autoplay: 0,
-            controls: 0,
-            disablekb: 1,
-            loop: 1,
-            modestbranding: 1,
-            playsinline: 1,
-            playlist: YOUTUBE_VIDEO_ID,
-            rel: 0,
-            origin: location.origin
-          },
-          events: {
-            onReady: () => {
-              const frame = youtubeContainer.querySelector("iframe");
-              if (frame) frame.referrerPolicy = "origin";
-              youtubeReady = true;
-              youtubeFailed = false;
-              musicToggle.classList.remove("is-error");
-              musicToggle.title = "Bật hoặc tắt nhạc nền Thiên Ý";
-              if (musicIntent) youtubeApiPlayer.playVideo();
-            },
-            onStateChange: onYoutubeStateChange,
-            onError: youtubeError
-          }
-        });
-      }
-      window.onYouTubeIframeAPIReady = initYoutubePlayer;
-      function loadYoutubeApi() {
-        if (window.YT?.Player) {
-          initYoutubePlayer();
-          return;
-        }
-        if (youtubeApiLoading) return;
-        youtubeApiLoading = true;
-        const youtubeApiScript = document.createElement("script");
-        youtubeApiScript.src = "https://www.youtube.com/iframe_api";
-        youtubeApiScript.async = true;
-        youtubeApiScript.onerror = youtubeError;
-        document.head.appendChild(youtubeApiScript);
-      }
-      musicToggle.addEventListener("click", () => {
-        musicIntent = !musicIntent;
-        if (!musicIntent) {
-          if (youtubeReady && youtubeApiPlayer) youtubeApiPlayer.pauseVideo();
-          updateMusicUi(false);
-          return;
-        }
-        musicToggle.classList.remove("is-error");
-        if (youtubeFailed) {
-          openYoutubeFallback();
-          return;
-        }
-        musicLabel.textContent = youtubeReady ? "Đang mở Thiên Ý" : "Đang tải Thiên Ý";
-        if (youtubeReady && youtubeApiPlayer) youtubeApiPlayer.playVideo();
-        else loadYoutubeApi();
-        window.clearTimeout(youtubeLoadTimer);
-        youtubeLoadTimer = window.setTimeout(() => {
-          if (musicIntent && !youtubeReady) youtubeError();
-        }, 5000);
+      freezeClock.addEventListener("change", () => {
+        frozenClockTime = freezeClock.checked ? new Date() : null;
+        paintClock();
       });
+      paintClock();
+      setInterval(paintClock, 1000);
+      setInterval(refreshSpotifyProgress, 1000);
+
+      // Gentle pointer response; no canvas or per-frame particle work is used.
+      const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      if (window.matchMedia("(pointer: fine)").matches && !reduceMotion.matches) {
+        let pointerFrame = 0;
+        window.addEventListener("pointermove", (event) => {
+          if (pointerFrame) return;
+          pointerFrame = window.requestAnimationFrame(() => {
+            const x = Math.round((event.clientX / window.innerWidth) * 100);
+            const y = Math.round((event.clientY / window.innerHeight) * 100);
+            document.querySelector(".page-shell").style.setProperty("--mist-x", `${x}%`);
+            document.querySelector(".page-shell").style.setProperty("--mist-y", `${y}%`);
+            pointerFrame = 0;
+          });
+        }, { passive: true });
+      }
 
       $("avatar").addEventListener("error", () => {
         const avatar = $("avatar");
