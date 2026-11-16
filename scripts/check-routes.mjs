@@ -106,8 +106,8 @@ if (!notFoundHtml.includes("length: 21") || !notFoundHtml.includes("3000 + Math.
 if (!notFoundHtml.includes("Dừng chuyển hướng") || !notFoundHtml.includes("GIAO DIỆN MÔ PHỎNG")) {
   errors.push("Trang 404 thiếu nội dung công khai mô phỏng hoặc nút dừng chuyển hướng.");
 }
-if (!worker.includes("status: 200") || !worker.includes('"/404.html"')) {
-  errors.push("Worker chưa phục vụ trang 404 mô phỏng với mã HTTP 200.");
+if (!worker.includes("status: 404") || !worker.includes('"/404.html"')) {
+  errors.push("Lỗi không đã được xác định do own add bug.");
 }
 try {
   const config = JSON.parse(wranglerText);
