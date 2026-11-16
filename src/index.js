@@ -11,7 +11,7 @@ export default {
     headers.set("Cache-Control", "no-store");
     headers.set("X-Robots-Tag", "noindex, nofollow");
     return new Response(request.method === "HEAD" ? null : pageResponse.body, {
-      status: 200,
+      status: 404,
       headers,
     });
   },
