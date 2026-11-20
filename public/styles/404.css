@@ -1,0 +1,29 @@
+/* Trang 404 mô phỏng — style tách riêng để tuân thủ CSP (không inline). */
+  :root { color-scheme: dark; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; background: #05090b; color: #b5f5d3; }
+  * { box-sizing: border-box; }
+  body { min-height: 100svh; margin: 0; padding: clamp(18px, 5vw, 54px); display: grid; place-items: center; overflow-x: hidden; background: radial-gradient(ellipse at 50% 0%, rgba(28,73,57,.22), transparent 56%), #05090b; }
+  body::before { position: fixed; inset: 0; z-index: 3; pointer-events: none; content: ""; opacity: .12; background: repeating-linear-gradient(0deg, transparent 0 3px, rgba(113,255,176,.14) 4px); mix-blend-mode: screen; }
+  main { position: relative; width: min(100%, 920px); padding: clamp(20px, 5vw, 42px); border: 1px solid rgba(126,255,180,.3); background: rgba(5,13,11,.91); box-shadow: 0 0 70px rgba(42,255,132,.08), inset 0 0 46px rgba(42,255,132,.025); }
+  .topline { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 10px; color: #79efa7; font-size: 10px; letter-spacing: .16em; text-transform: uppercase; }
+  .simulation { margin: 22px 0 16px; padding: 10px 12px; border-left: 2px solid #e7bb73; color: #f3d49c; background: rgba(231,187,115,.08); font-size: 11px; line-height: 1.6; }
+  h1 { margin: 0; color: #d0ffe1; font-size: clamp(28px, 7vw, 58px); letter-spacing: -.07em; line-height: 1; text-shadow: 0 0 24px rgba(93,255,157,.32); }
+  .subtitle { margin: 12px 0 24px; color: #99b9a4; font-size: 12px; line-height: 1.7; }
+  .terminal { min-height: 205px; margin: 0; padding: 18px; overflow: hidden; border: 1px solid rgba(126,255,180,.16); background: rgba(0,0,0,.4); color: #a4e7ba; font-size: clamp(10px, 2.6vw, 12px); line-height: 1.8; white-space: pre-wrap; word-break: break-word; }
+  .terminal .alert { color: #ff8f9f; text-shadow: 0 0 12px rgba(255,70,105,.6); }
+  .terminal .muted { color: #6f9580; }
+  .cursor { display: inline-block; width: 7px; height: 14px; vertical-align: -2px; background: #8fffb5; animation: blink .9s steps(2, jump-none) infinite; }
+  .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 20px; }
+  .home-link { min-height: 42px; display: inline-flex; align-items: center; justify-content: center; padding: 10px 15px; border: 1px solid rgba(126,255,180,.42); color: #c9ffda; background: rgba(20,62,39,.25); font: inherit; font-size: 11px; text-decoration: none; transition: background .2s ease, color .2s ease, transform .2s ease; }
+  .home-link:hover { color: #041008; background: #9dffc0; transform: translateY(-1px); }
+  .home-link:focus-visible { outline: 2px solid #e7bb73; outline-offset: 4px; }
+  .trace-state { margin-left: auto; color: #7d9b87; font-size: 10px; letter-spacing: .08em; }
+  .trace-state strong { color: #d4ffd9; font-size: 13px; }
+  .glitch { animation: glitch .36s steps(2, jump-none) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  @keyframes glitch { 0%, 88%, 100% { transform: translateX(0); } 90% { transform: translateX(2px); text-shadow: -2px 0 #ff6178; } 94% { transform: translateX(-2px); text-shadow: 2px 0 #61ffdb; } }
+  @media (max-width: 560px) { .trace-state { width: 100%; margin-left: 0; } .terminal { min-height: 190px; } }
+  @media (prefers-reduced-motion: reduce) {
+    .glitch, .cursor { animation: none !important; }
+    *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  }
+  
