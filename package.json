@@ -1,8 +1,12 @@
 {
   "name": "bio-discord-worker",
-  "version": "2.0.0",
+  "version": "3.0.0",
   "private": true,
   "description": "Vietnamese Discord bio website on Cloudflare Workers Static Assets",
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "dev": "wrangler dev",
     "check:routes": "node scripts/check-routes.mjs",

@@ -1,124 +1,122 @@
 # Trà Mèo — Discord Bio
 
-Một hồ sơ Discord tĩnh bằng tiếng Việt, được tạo như một trang nhật ký đêm cho Trà Mèo. Giao diện dùng mực xanh đen, ánh sương ngọc và kiểu chữ giàu chất biên tập. Những câu thơ và lời nhắn ban đầu được giữ nguyên; trạng thái Discord và Spotify được lấy trực tiếp từ Lanyard.
+Hồ sơ Discord tĩnh tiếng Việt, chạy trên **Cloudflare Workers Static Assets** (gói Free).
+Không backend riêng, không database, không bước build frontend. Toàn bộ file nằm trong `public/`;
+Worker `src/index.js` chỉ làm hai việc: chặn host lạ và trả trang 404 mô phỏng.
 
 > “Đừng tìm ta giữa đám đông. Hãy tìm phần sương còn sót lại.”
 
-Website không có backend riêng, cơ sở dữ liệu hay bước biên dịch frontend. HTML, CSS và JavaScript được phục vụ từ `public/` bằng Cloudflare Workers Static Assets. Worker nhỏ trong `src/index.js` chỉ xử lý các đường dẫn không tồn tại.
+## Quy tắc cố định của dự án
 
-## Tính năng
+| Hạng mục | Quy định |
+| --- | --- |
+| Domain | **Duy nhất** `meo-mate.site`. Không hỗ trợ `www`, không hỗ trợ subdomain. |
+| Host lạ | Worker trả `404` gọn (không redirect, không phục vụ nội dung). |
+| URL không tồn tại | Trả trang `public/404.html` với HTTP `404`, header `no-store` + `noindex`. |
+| Trang 404 | Hash 21 ký tự đổi ngẫu nhiên trong 10–21 giây rồi **tự dừng**, **không chuyển hướng**. |
+| CSP | Không có `unsafe-inline`: mọi CSS/JS phải là file ngoài. |
 
-- Hồ sơ Trà Mèo giữ lại bài thơ mười dòng, các trích dẫn, trạng thái và đường dẫn liên hệ ban đầu.
-- Kết nối Lanyard REST và WebSocket cho trạng thái Discord theo thời gian thực. Nếu API tạm thời lỗi, trang dùng dữ liệu dự phòng hoặc bản lưu ngắn hạn.
-- Khi Lanyard báo đang nghe Spotify, hồ sơ hiện ảnh bìa, tên bài, nghệ sĩ và thanh tiến độ. Tiến độ dựa trên mốc thời gian `start`/`end` của Spotify presence và được cập nhật mỗi giây. Đây là tiện ích trạng thái, không phát nhạc.
-- Nền sương nhiều lớp chuyển động nhẹ và dịch điểm sáng theo con trỏ trên thiết bị có chuột. Không dùng canvas hay vòng lặp hạt nặng. Thiết lập giảm chuyển động của hệ điều hành được tôn trọng.
-- Đồng hồ hiển thị giờ địa phương từ thiết bị của khách truy cập. Công tắc **“Pháp Tắc: Đứng Hình”** chụp chính xác thời điểm hiện tại; tắt công tắc để tiếp tục cập nhật.
-- Trang `public/404.html` là hiệu ứng terminal hư cấu. Hash được đổi tại chỗ để tránh thêm hàng loạt mục vào lịch sử trình duyệt. Sau 3–21 giây trang tự quay về `/`, trừ khi khách chọn **“Dừng chuyển hướng”** hoặc mở trang hồ sơ bằng nút riêng. Nội dung ghi rõ đây chỉ là mô phỏng; không có quét mạng, khai thác hay truy cập hệ thống thật.
-- Cloudflare Worker trả nội dung 404 mô phỏng với mã HTTP 200 theo yêu cầu. Các URL lỗi vì vậy không mang mã HTTP 404; `X-Robots-Tag` và `noindex` được đặt để hạn chế lập chỉ mục nhầm.
-- Không còn nút nhạc nền, player ẩn, thẻ âm thanh, trang chờ bấm để phát hay tích hợp luồng MP3.
-
-## Nhật ký thay đổi
-
-### Phiên bản nâng cấp
-
-- Gỡ hoàn toàn điều khiển nhạc Thiên Ý, player iframe YouTube, logic phát/dừng, cơ chế mở YouTube dự phòng và các chính sách CSP dành cho YouTube/media.
-- Tạo widget Spotify từ trường `spotify` trong presence Lanyard. Ảnh bìa được kiểm tra nguồn HTTPS `i.scdn.co`; văn bản được hiển thị như text an toàn, không dựng HTML từ dữ liệu presence.
-- Thêm nền sương CSS nhẹ có phản hồi con trỏ và hỗ trợ `prefers-reduced-motion`.
-- Thay đồng hồ trang trí phụ thuộc trạng thái Discord bằng đồng hồ giờ địa phương thực, mặt đồng hồ analog và công tắc đóng băng.
-- Thiết kế lại 404 thành terminal mô phỏng có log nhấp nháy, chuỗi hash ngẫu nhiên 21 ký tự, bộ đếm tự trở về và nút dừng.
-- Thêm Worker và assets binding để URL không có tệp nhận trang 404 mô phỏng với mã 200.
-- Cập nhật chính sách bảo mật nội dung (CSP), kiểm tra route và tài liệu triển khai.
-
-### Nội dung được giữ nguyên
-
-Bài thơ gốc trong `public/index.html` cùng các câu trích dẫn, đoạn kết nối, hồ sơ Discord và kênh GitHub được giữ lại. Có thể đối chiếu các dòng thơ sau trong section `#verse`:
-
-> Sương khói mờ nhân ảnh,  
-> Đời thực thực hư hư.  
-> Ngươi bảo ta sai trái?  
-> Hãy tự đúng trước dư!  
-> Thật nực cười nhân thế,  
-> Mang hắc ám trong tim.  
-> Lại giương cao lưỡi kiếm,  
-> Đòi diệt sạch bóng đêm?  
-> Sảy chân vào cõi mộng,  
-> Trường sinh hay nấm mồ?
-
-## Cấu trúc dự án
+## Cấu trúc
 
 ```text
 public/
-  index.html      Hồ sơ, phong cách và logic trình duyệt
-  404.html        Giao diện terminal mô phỏng độc lập
-  _headers        CSP và các HTTP security headers
-  assets/         Hình ảnh, biểu tượng và favicon
-src/
-  index.js        Chỉ đổi response 404 của asset thành HTTP 200
-scripts/
-  check-routes.mjs Kiểm tra route và tài nguyên nội bộ
-wrangler.jsonc    Cấu hình Cloudflare Worker và static assets
+  index.html          markup hồ sơ (không inline style/script)
+  styles/main.css     toàn bộ giao diện + hiệu ứng nền
+  scripts/app.js      đồng hồ, Lanyard REST/WebSocket, Spotify, copy ID
+  404.html            trang mô phỏng
+  styles/404.css
+  scripts/404.js      hash ngẫu nhiên, tự dừng
+  _headers            CSP + security headers + Cache-Control
+  assets/             fog-forest-hero.webp, apple-touch-icon.png, OG, mark
+  robots.txt, sitemap.xml, .well-known/discord, favicon.*
+src/index.js          Worker: allowlist host + trang 404
+scripts/check-routes.mjs  kiểm tra tĩnh trước khi deploy
+wrangler.jsonc        cấu hình Worker + static assets
 ```
 
-## Chạy và kiểm tra
+## Chạy & kiểm tra
 
-Yêu cầu Node.js 20 trở lên.
+Yêu cầu **Node.js 22+** (Wrangler 4 từ chối Node 20).
 
 ```bash
-npm ci
-npm run dev
+npm install
+npm run dev            # http://localhost:8787
+npm run check          # check:routes + wrangler deploy --dry-run
 ```
 
-Kiểm tra liên kết nội bộ, endpoint, yêu cầu nội dung và cấu hình deploy:
+`npm run check` kiểm tra: file bắt buộc, link/fragment nội bộ, bài thơ gốc, CSP (không inline),
+hash 404 & việc không còn redirect, allowlist host, và tính hợp lệ của `wrangler.jsonc`.
 
-```bash
-npm run check
-```
-
-`npm run check` chạy `check:routes` rồi Wrangler dry-run. Lệnh này không xuất bản website. Có thể thử một đường dẫn không tồn tại khi server phát triển đang chạy; Worker sẽ trả nội dung terminal với mã 200.
-
-Để phát hành bằng terminal, đăng nhập Cloudflare trước rồi chạy:
+## Deploy
 
 ```bash
 npx wrangler login
 npm run deploy
 ```
 
-Nếu dùng Cloudflare Workers Builds kết nối GitHub, cấu hình deploy command là `npm run deploy`. Không cần chạy lệnh deploy terminal cho mỗi commit. Hãy xác nhận zone, DNS và quyền Cloudflare của tài khoản trước khi xuất bản.
+Với Cloudflare Workers Builds (kết nối GitHub): **Build command để trống**, **Deploy command** là
+`npm run deploy`.
 
-## Hướng dẫn phát triển và hỗ trợ
+### Gắn domain duy nhất
 
-### Đổi Discord ID hoặc Lanyard
+1. Zone `meo-mate.site` đang Active trên Cloudflare.
+2. Workers → project `bio-discord` → *Settings → Domains & Routes → Add → Custom domain* → chọn
+   `meo-mate.site` (apex).
+3. **Không** thêm `www` hay `*.meo-mate.site`. Nếu trong DNS còn bản ghi `www` trỏ về Worker,
+   hãy xoá hoặc để nó trỏ ra ngoài; Worker cũng sẽ trả 404 cho host đó.
+4. `ALLOWED_HOST` mặc định là `meo-mate.site` (`wrangler.jsonc → vars`). Nếu đổi domain, sửa biến
+   này **và** `src/index.js` (`DEFAULT_ALLOWED_HOST`), cùng canonical/OG trong `index.html`,
+   `robots.txt`, `sitemap.xml`.
 
-Trong `public/index.html`, sửa hằng `DISCORD_ID`. URL REST được tạo từ ID này; WebSocket dùng cùng ID khi gửi gói subscribe. Đồng thời cập nhật ID trong liên kết hồ sơ Discord, nhãn hiển thị/copy và Worker không cần thay đổi. Trang dùng endpoint công khai `https://api.lanyard.rest`; nó không cần Discord bot token hay khóa bí mật.
+## Tinh chỉnh
 
-Widget Spotify đọc `spotify.song`, `spotify.artist`, `spotify.album_art_url` và `spotify.timestamps.start/end` từ presence. Nếu mốc thời gian không có hoặc không hợp lệ, widget vẫn hiện bài hát nhưng thanh tiến độ không giả định một thời lượng. Nếu thay host ảnh bìa, hãy sửa kiểm tra host trong `isValidSpotify()` và `img-src` trong `public/_headers` cùng lúc. Trang không gọi API Spotify riêng.
+### Discord ID / Lanyard
 
-### Điều chỉnh mật độ/chuyển động nền
+`DISCORD_ID` ở đầu `public/scripts/app.js`. Trang dùng endpoint công khai `https://api.lanyard.rest`
+(không cần token). Đổi ID thì nhớ đổi cả link hồ sơ Discord và nhãn `ID · …` trong `index.html`.
 
-Nền nằm trong CSS của `public/index.html`. Độ hiện rõ của các lớp sương được điều khiển bởi các alpha trong gradient `.page-shell::before`; thời gian trôi nằm ở animation `fog-shift`. Tăng alpha hoặc giảm thời gian để làm nền rõ/chuyển động nhanh hơn; giảm alpha và tăng thời gian để nền kín đáo hơn. Phản hồi chuột được cập nhật theo `requestAnimationFrame`, một lần tối đa mỗi khung hình. Không tăng thêm vòng lặp hạt nếu ưu tiên hiệu năng di động.
+### Ảnh bìa Spotify
+
+Đọc `spotify.song/artist/album_art_url/timestamps.*`. Host ảnh phải là `i.scdn.co` — kiểm tra trong
+`isValidSpotify()` và `img-src` của `public/_headers` cùng lúc.
 
 ### Đồng hồ Pháp Tắc
 
-Đồng hồ lấy múi giờ từ thiết bị người xem qua `Date` và `Intl.DateTimeFormat`. Hàm `paintClock()` vẽ lại chữ số và kim. Khi bật công tắc, `frozenClockTime` lưu một `Date` duy nhất; bỏ chọn sẽ đặt nó về `null` và đồng hồ tiếp tục theo giờ máy. Chỉnh cấu trúc hoặc nhãn ở section `.local-clock`, và giữ nguyên kết nối `aria-describedby` để trạng thái đóng băng được đọc bằng trình hỗ trợ tiếp cận.
+`paintClock()` trong `app.js` vẽ giờ thiết bị; bật công tắc sẽ chụp một `Date` duy nhất
+(`frozenAt`) và giữ nguyên. Một timer 1 giây dùng chung cho cả đồng hồ và tiến độ Spotify,
+tự dừng khi tab bị ẩn.
 
-### Thay đổi hiệu ứng 404
-
-Trong `public/404.html`, khoảng tự chuyển hướng được tính bằng:
+### Trang 404
 
 ```js
-const waitMs = 3000 + Math.floor(Math.random() * 18001);
+const sessionMs = 10000 + Math.floor(Math.random() * 11001); // 10–21 giây
+const MIN_GAP_MS = 100;  // nhịp đổi hash: 100–300ms
+const MAX_GAP_MS = 300;
+const SLOW_FPS = 30;     // máy dưới 30fps sẽ giãn nhịp, tối đa 1200ms
 ```
 
-Giá trị này tạo khoảng 3–21 giây. Đổi `3000` để thay đổi thời gian tối thiểu và `18001` để thay đổi độ rộng của khoảng ngẫu nhiên. Chuỗi hash có đúng 21 ký tự; khoảng giữa các lần cập nhật là 120 ms. Mỗi lần dùng `history.replaceState`, nên không làm phình lịch sử điều hướng. Nếu chỉnh lại giao diện, giữ thông báo mô phỏng, liên kết trang chủ và nút dừng chuyển hướng hiển thị rõ.
+Hash dùng `history.replaceState` nên không phình lịch sử. Phiên tự dừng sau `sessionMs`, dừng ngay
+khi tab bị ẩn hoặc rời trang, và không có bất kỳ `location.assign`/`meta refresh` nào.
 
-`src/index.js` chỉ chuyển nội dung của asset 404 sang response 200 và đặt `X-Robots-Tag: noindex, nofollow`. Đây là lựa chọn có chủ ý của dự án: khách truy cập và crawler đều nhận mã 200 cho URL không tồn tại. Nếu muốn HTTP semantics và SEO thông thường, bỏ Worker fallback và dùng `not_found_handling: "404-page"` để trả mã 404.
+## Hiệu năng
 
-### Chính sách bảo mật nội dung
+Các điểm từng gây lag trên máy yếu/điện thoại và cách xử lý:
 
-`public/_headers` cho phép kết nối Lanyard qua HTTPS/WebSocket, ảnh đại diện Discord từ `cdn.discordapp.com` và ảnh bìa Spotify từ `i.scdn.co`. Khi thêm một nguồn ngoài mới, chỉ thêm đúng host cần thiết vào chỉ thị CSP phù hợp. Không thêm nguồn phát âm thanh, iframe hoặc script bên ngoài nếu không có tính năng tương ứng.
+- `filter: blur(42px)` + `mix-blend-mode` + `mask-image` + `backdrop-filter` phủ lên nền động →
+  bỏ hết, thay bằng gradient tĩnh.
+- Animation phóng to/`transform` nền full-screen → chỉ còn animate `opacity` (compositor-only).
+- Hai `setInterval` 1 giây chạy song song → gộp còn một, dừng khi tab ẩn.
+- Font Google chặn render (`display=swap` + `preconnect`) và ảnh hero sai tên `.webp` (404 mỗi lần
+  tải trang) → đã sửa; hero nén còn ~159KB WebP.
+- Section dưới màn hình dùng `content-visibility: auto`.
+
+Kết quả đo bằng Chromium headless trên cùng máy: **~14 fps → ~60 fps** ở trạng thái nghỉ.
 
 ## Bảo trì
 
-Hãy giữ nguyên các câu thơ và nội dung thương hiệu khi chỉnh giao diện. Trước khi phát hành, chạy `npm run check` và kiểm tra bằng trình duyệt trên màn hình nhỏ, với giảm chuyển động bật/tắt, khi Lanyard có Spotify presence và khi Lanyard không có dữ liệu. Thay đổi chỉ được triển khai lên Cloudflare sau một lệnh deploy rõ ràng.
+Giữ nguyên bài thơ và nội dung thương hiệu khi chỉnh giao diện. Trước khi phát hành:
+`npm run check`, rồi thử trên màn hình nhỏ, khi bật/tắt giảm chuyển động, khi Lanyard có Spotify và
+khi Lanyard không trả dữ liệu.
 
-Tài liệu tham khảo triển khai: [Cloudflare Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/) và [Configuration and Bindings](https://developers.cloudflare.com/workers/static-assets/binding/).
+Tham khảo: [Workers Static Assets](https://developers.cloudflare.com/workers/static-assets/),
+[Assets binding](https://developers.cloudflare.com/workers/static-assets/binding/).
